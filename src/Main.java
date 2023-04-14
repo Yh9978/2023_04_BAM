@@ -2,7 +2,7 @@
 //   Workspace 이름 eclipes-work_space
 
 
-
+package bam;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -29,7 +29,7 @@ public class Main {
             System.out.printf("내용 : ");
             String body = sc.nextLine();
 
-            Article article = new Article(id, title, body);
+            Article article = new Article(id, Util.getDataStr(), title, body);
             articles.add(article);
             System.out.printf("%d번 글이 생성되었습니다\n", id);
 
@@ -41,15 +41,15 @@ public class Main {
                continue;
             }
             System.out.println("== 게시물 목록 ==");
-            System.out.println("번호   |   제목   ");
+            System.out.println("번호   |   제목   |	작성일	");
             for (int i = articles.size() - 1; i >= 0; i--) {
 				Article article = articles.get(i);
-            System.out.printf("%d	|	%s	\n", article.id, article.title);
+            System.out.printf("%d	|	%s	|	%s	\n", article.id, article.title);
          }
          for (int i = articles.size() - 1; i >= 0; i--) {
             Article article = articles.get(i);
 
-            System.out.printf("%d   |   %s   \n", article.id, article.title);
+            System.out.printf("%d   |   %s   \n", article.id, article.title, article.regDate);
          }
          //게시글 확인
          if (cmd.startsWith("article detail ")) {
@@ -148,12 +148,16 @@ class Article {
    int id;
    String title;
    String body;
+   String regData;
 
-   public Article(int id, String title, String body) {
+   public Article(int id, String regData, String title, String body) {
       this.id = id;
+      this.regData = regData;
       this.title = title;
       this.body = body;
    }
 }
 
-//에러 해결
+//게시물 시간 추가
+//Util.java에서 에러 발생
+//시간에서 에러 발생
