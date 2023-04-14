@@ -78,8 +78,40 @@ public class Main {
 			} 
 		}
          //게시글 수정
-         if (cmd.startsWith("article modify ")) {
-				String[] cmdBits = cmd.split(" ");
+         	 else if (cmd.startsWith("article modify ")) {
+
+ 				String[] cmdBits = cmd.split(" ");
+ 				int id = Integer.parseInt(cmdBits[2]);
+
+ 				Article foundArticle = null;
+
+ 				for (Article article : articles) {
+ 					if (article.id == id) {
+ 						foundArticle = article;
+ 						break;
+ 					}
+ 				}
+
+ 				if (foundArticle == null) {
+ 					System.out.printf("%d번 게시물은 존재하지 않습니다\n", id);
+ 					continue;
+ 				}
+
+ 				System.out.println("== 게시물 수정 ==");
+ 				System.out.printf("수정할 제목 : ");
+ 				String title = sc.nextLine();
+ 				System.out.printf("수정할 내용 : ");
+ 				String body = sc.nextLine();
+
+ 				foundArticle.title = title;
+ 				foundArticle.body = body;
+
+ 				System.out.printf("%d번 게시물이 수정되었습니다\n", id);
+        		 continue;
+        	 }
+         //게시글 삭제
+      		else if (cmd.startsWith("article deldte")) {
+        	 String[] cmdBits = cmd.split(" ");
 				int id = Integer.parseInt(cmdBits[2]);
 
 				Article foundArticle = null;
@@ -88,28 +120,16 @@ public class Main {
 					if (article.id == id) {
 						foundArticle = article;
 						break;
+					}
+				}
 				if (foundArticle == null) {
 					System.out.printf("%d번 게시물은 존재하지 않습니다\n", id);
 					continue;
 				}
-        	 else if(foundArticle <= 0) {
-        		 String title = sc.nextLine();
-        		 System.out.printf("수정할 제목 : ", title);
-        		 String body = sc.nextLine();
-        		 System.out.printf("수정할 내용 : ", body);
-        		 continue;
-        	 }
-         }
-         //게시글 삭제
-         if (cmd.equals("article deldte %d\n", id)) {
-        	 if (articles.id == null) {
-        		 System.out.printf("%d 번 게시물은 존재하지 않습니다", id);
-        	 }
-        	 else if(articles.id <= 0) {
 
-        		 System.out.printf("%d 번 게시물이 삭제되었습니다", id);
-        	 }
-        	 	continue;
+				articles.remove(foundArticle);
+
+				System.out.printf("%d번 게시물이 삭제되었습니다\n", id);
          }
  
          else {
@@ -136,6 +156,4 @@ class Article {
    }
 }
 
-//게시글 수정과 삭제 추가
-//article과 equals에서 에러 발생
-
+//에러 해결
