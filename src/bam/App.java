@@ -57,19 +57,12 @@ public class App {
 
 					System.out.printf("%d	|	%s	|	%s	\n", article.id, article.title, article.regData);
 				}
-			} else if (cmd.startsWith("article detail ")) {
+			} else if (cmd.startsWith("article detail")) {
 
 				String[] cmdBits = cmd.split(" ");
 				int id = Integer.parseInt(cmdBits[2]);
 
-				Article foundArticle = null;
-
-				for (Article article : articles) {
-					if (article.id == id) {
-						foundArticle = article;
-						break;
-					}
-				}
+				Article foundArticle = getArticleById(id);
 
 				if (foundArticle == null) {
 					System.out.printf("%d번 게시물은 존재하지 않습니다\n", id);
@@ -87,14 +80,7 @@ public class App {
 				String[] cmdBits = cmd.split(" ");
 				int id = Integer.parseInt(cmdBits[2]);
 
-				Article foundArticle = null;
-
-				for (Article article : articles) {
-					if (article.id == id) {
-						foundArticle = article;
-						break;
-					}
-				}
+				Article foundArticle = getArticleById(id);
 
 				if (foundArticle == null) {
 					System.out.printf("%d번 게시물은 존재하지 않습니다\n", id);
@@ -119,13 +105,6 @@ public class App {
 
 				Article foundArticle = null;
 
-				for (Article article : articles) {
-					if (article.id == id) {
-						foundArticle = article;
-						break;
-					}
-				}
-
 				if (foundArticle == null) {
 					System.out.printf("%d번 게시물은 존재하지 않습니다\n", id);
 					continue;
@@ -145,6 +124,14 @@ public class App {
 		System.out.println("== 프로그램 끝 ==");
 	}
 
+	private Article getArticleById(int id) {
+		for (Article article : articles) {
+			if (article.id == id) {
+				return article;
+			}
+		}
+		return null;
+	}
 	private void makeTestData() {
 		System.out.println("테스트용 게시물 데이터 5개 생성");
 
