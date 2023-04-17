@@ -13,6 +13,7 @@ public class App {
 		lastArticleId = 0;
 	}
 
+	@SuppressWarnings("unused")
 	public void run() {
 		System.out.println("== 프로그램 시작 ==");
 
@@ -44,25 +45,50 @@ public class App {
 
 				System.out.printf("%d번 글이 생성되었습니다\n", id);
 
-			} else if (cmd.equals("article list")) {
+			} else if (cmd.startsWith("article list")) {
 				if (articles.size() == 0) {
 					System.out.println("존재하는 게시물이 없습니다");
 					continue;
 				}
+				
+				List<Article> printArticle = articles;
+				
+				String searchKeyword = cmd.substring("article list".length()).trim();
+				
+				if(searchKeyword.length() > 0) {
+					System.out.printf("검색어 : ", searchKeyword);
+					
+					printArticle = new ArrayList<>();
+					
+					for(Article article : articles) {
+						if(article.title.contains(searchKeyword)) {
+							printArticle.add(article);
+						}
+					}
+					
+					if(printArticle.size() == 0) {
+						System.out.println("검색결과가 없습니다");
+						continue;
+					}
+				}
+				
 				System.out.println("== 게시물 목록 ==");
 				System.out.println("번호	|	제목	|	작성일	");
+				
 
 				for (int i = articles.size() - 1; i >= 0; i--) {
 					Article article = articles.get(i);
 
 					System.out.printf("%d	|	%s	|	%s	\n", article.id, article.title, article.regData);
 				}
+				
 			} else if (cmd.startsWith("article detail")) {
 
 				String[] cmdBits = cmd.split(" ");
 				int id = Integer.parseInt(cmdBits[2]);
 
 				Article foundArticle = getArticleById(id);
+				
 
 				if (foundArticle == null) {
 					System.out.printf("%d번 게시물은 존재하지 않습니다\n", id);
