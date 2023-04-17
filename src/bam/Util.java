@@ -1,4 +1,4 @@
-package bam.util;
+package bam;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
