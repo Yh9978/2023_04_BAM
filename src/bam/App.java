@@ -3,6 +3,7 @@ package bam;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import bam.Member;
 
 public class App {
 	private List<Article> articles;
@@ -12,7 +13,9 @@ public class App {
 
 	public App() {
 		articles = new ArrayList<>();
+		members = new ArrayList<>();
 		lastArticleId = 0;
+		lastMemberId = 0;
 	}
 
 	@SuppressWarnings("unused")
@@ -48,11 +51,6 @@ public class App {
 					System.out.printf("아이디 : ");
 					String loginId = sc.nextLine();
 
-					for(Member member : members) {
-						if(member.loginId.equals(loginId)) {
-							isLoginIdDup = true;
-							break;
-						}
 					}
 					if(isLoginIdDup) {
 						System.out.printf("%s은(는) 이미 사용중인 아이디입니다\n", loginId);
@@ -84,7 +82,7 @@ public class App {
 
 				System.out.println("회원가입이 완료되었습니다");
 
-			}else if (cmd.equals("member list")) {
+			}if (cmd.equals("member list")) {
 
 				for (int i = members.size() - 1; i >= 0; i--) {
 					Member member = members.get(i);
@@ -222,12 +220,13 @@ public class App {
 	}
 	
 	private boolean isLoginIdDup(String loginId) {
-		for (Member member : members) {
-			if (member.loginId == loginId) {
+		for(Member member : members) {
+			if(member.loginId.equals(loginId)) {
 				return false;
 			}
 		}
 		return true;
+	
 	}
 	private void makeTestData() {
 		System.out.println("테스트용 게시물 데이터 5개 생성");
