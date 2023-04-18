@@ -6,7 +6,9 @@ import java.util.Scanner;
 
 public class App {
 	private List<Article> articles;
+	private List<Member> members;
 	private int lastArticleId;
+	private int lastMemberId;
 
 	public App() {
 		articles = new ArrayList<>();
@@ -30,7 +32,67 @@ public class App {
 				break;
 			}
 
-			if (cmd.equals("article write")) {
+			if (cmd.equals("article join")) {
+				System.out.println("== 회원가입 ==");
+				int id = lastMemberId + 1;
+				lastMemberId = id;
+				
+				String lastloginId = null;
+				
+
+				
+				while(true) {
+					
+					boolean isLoginIdDup = false;
+					
+					System.out.printf("아이디 : ");
+					String loginId = sc.nextLine();
+
+					for(Member member : members) {
+						if(member.loginId.equals(loginId)) {
+							isLoginIdDup = true;
+							break;
+						}
+					}
+					if(isLoginIdDup) {
+						System.out.printf("%s은(는) 이미 사용중인 아이디입니다\n", loginId);
+						continue;
+					}
+				
+				}
+				String loginPw = null;
+						
+				while(true) {
+					System.out.printf("비밀번호 : ");
+					loginPw = sc.nextLine();
+					System.out.printf("비밀번호 확인 : ");
+					String loginpwChk = sc.nextLine();
+					
+					if(loginPw.equals(loginpwChk) == false) {
+						System.out.println("비밀번호가 다릅니다");
+						continue;
+					}
+					break;
+				}
+
+				System.out.printf("이름 : ");
+				String name = sc.nextLine();
+
+				Member member = new Member(id, Util.getDateStr(), loginId, loginPw, name);
+
+				members.add(member);
+
+				System.out.println("회원가입이 완료되었습니다");
+
+			}else if (cmd.equals("member list")) {
+
+				for (int i = members.size() - 1; i >= 0; i--) {
+					Member member = members.get(i);
+
+					System.out.printf("%d	|	%s	|	%s	|	%s	\n", member.id, member.loginId, member.regData, member.name);
+				}
+
+			}if (cmd.equals("article write")) {
 				System.out.println("== 게시물 작성 ==");
 				int id = lastArticleId + 1;
 				lastArticleId = id;
@@ -157,6 +219,15 @@ public class App {
 			}
 		}
 		return null;
+	}
+	
+	private boolean isLoginIdDup(String loginId) {
+		for (Member member : members) {
+			if (member.loginId == loginId) {
+				return false;
+			}
+		}
+		return true;
 	}
 	private void makeTestData() {
 		System.out.println("테스트용 게시물 데이터 5개 생성");
