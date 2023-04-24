@@ -6,17 +6,16 @@ import bam.container.Container;
 import bam.dto.Member;
 import bam.service.MemberService;
 import bam.util.Util;
-
 public class MemberController extends Controller {
 	
 	private Scanner sc;
 	private MemberService memberService;
-	
+
 	public MemberController(Scanner sc) {
 		this.sc = sc;
 		this.memberService = Container.memberService;
 	}
-	
+
 	@Override
 	public void doAction(String cmd, String methodName) {
 		
@@ -73,11 +72,8 @@ public class MemberController extends Controller {
 		
 		System.out.printf("이름 : ");
 		String name = sc.nextLine();
-
 		Member member = new Member(id, Util.getDateStr(), loginId, loginPw, name);
-
 		memberService.add(member);
-
 		System.out.printf("%s회원님이 가입되었습니다\n", loginId);
 	}
 	
@@ -98,7 +94,6 @@ public class MemberController extends Controller {
 			System.out.println("비밀번호를 확인해주세요");
 			return;
 		}
-
 		loginedMember = member;
 		
 		System.out.printf("%s님 환영합니다\n", member.name);

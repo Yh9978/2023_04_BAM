@@ -1,24 +1,24 @@
 package bam.controller;
-
 import java.util.List;
 import java.util.Scanner;
 
 import bam.container.Container;
 import bam.dto.Article;
 import bam.service.ArticleService;
+import bam.service.MemberService;
 import bam.util.Util;
-
 public class ArticleController extends Controller {
-
 	private Scanner sc;
 	private String cmd;
 	private ArticleService articleService;
-	
+	private MemberService memberService;
+
 	public ArticleController(Scanner sc) {
 		this.articleService = Container.articleService;
+		this.memberService = Container.memberService;
 		this.sc = sc;
 	}
-	
+
 	@Override
 	public void doAction(String cmd, String methodName) {
 		this.cmd = cmd;
@@ -44,7 +44,6 @@ public class ArticleController extends Controller {
 			break;
 		}
 	}
-
 	private void doWrite() {
 		System.out.println("== 게시물 작성 ==");
 		int id = articleService.setLastId();
@@ -52,14 +51,10 @@ public class ArticleController extends Controller {
 		String title = sc.nextLine();
 		System.out.printf("내용 : ");
 		String body = sc.nextLine();
-
 		Article article = new Article(id, Util.getDateStr(), loginedMember.id, title, body);
-
 		articleService.add(article);
-
 		System.out.printf("%d번 글이 생성되었습니다\n", id);
 	}
-
 	private void showList() {
 		
 		String searchKeyword = cmd.substring("article list".length()).trim();
@@ -73,14 +68,13 @@ public class ArticleController extends Controller {
 		
 		System.out.println("== 게시물 목록 ==");
 		System.out.println("번호	|	제목	|		작성일		|	작성자");
-
 		for (int i = printArticles.size() - 1; i >= 0; i--) {
 			Article article = printArticles.get(i);
+			String writerName = memberService.getWriterName(article.memberId);
 
-			System.out.printf("%d	|	%s	|	%s	|	%d\n", article.id, article.title, article.regDate, article.memberId);
+			System.out.printf("%d	|	%s	|	%s	|	%s\n", article.id, article.title, article.regDate, writerName);
 		}
 	}
-
 	private void showDetail() {
 		String[] cmdBits = cmd.split(" ");
 		
@@ -90,18 +84,20 @@ public class ArticleController extends Controller {
 		}
 		
 		int id = Integer.parseInt(cmdBits[2]);
-
 		Article foundArticle = articleService.getArticleById(id);
 		
 		if (foundArticle == null) {
 			System.out.printf("%d번 게시물은 존재하지 않습니다\n", id);
 			return;
 		}
-
+		
+		String writerName = memberService.getWriterName(foundArticle.memberId);
+		
+		
 		System.out.println("== 게시물 상세보기 ==");
 		System.out.printf("번호 : %d\n", foundArticle.id);
 		System.out.printf("작성일 : %s\n", foundArticle.regDate);
-		System.out.printf("작성자 : %d\n", foundArticle.memberId);
+		System.out.printf("작성자 : %s\n", writerName);
 		System.out.printf("제목 : %s\n", foundArticle.title);
 		System.out.printf("내용 : %s\n", foundArticle.body);
 	}
@@ -117,12 +113,10 @@ public class ArticleController extends Controller {
 		int id = Integer.parseInt(cmdBits[2]);
 		
 		Article foundArticle = articleService.getArticleById(id);
-
 		if (foundArticle == null) {
 			System.out.printf("%d번 게시물은 존재하지 않습니다\n", id);
 			return;
 		}
-
 		if (foundArticle.memberId != loginedMember.id) {
 			System.out.println("해당 게시물에 대한 권한이 없습니다");
 			return;
@@ -133,10 +127,8 @@ public class ArticleController extends Controller {
 		String title = sc.nextLine();
 		System.out.printf("수정할 내용 : ");
 		String body = sc.nextLine();
-
 		foundArticle.title = title;
 		foundArticle.body = body;
-
 		System.out.printf("%d번 게시물이 수정되었습니다\n", id);
 	}
 	
@@ -147,22 +139,20 @@ public class ArticleController extends Controller {
 			System.out.println("명령어를 확인해주세요");
 			return;
 		}
+
 		int id = Integer.parseInt(cmdBits[2]);
 
 		Article foundArticle = articleService.getArticleById(id);
-
 		if (foundArticle == null) {
 			System.out.printf("%d번 게시물은 존재하지 않습니다\n", id);
 			return;
 		}
-
 		if (foundArticle.memberId != loginedMember.id) {
 			System.out.println("해당 게시물에 대한 권한이 없습니다");
 			return;
 		}
 		
 		articleService.remove(foundArticle);
-
 		System.out.printf("%d번 게시물이 삭제되었습니다\n", id);
 	}
 	
@@ -171,5 +161,4 @@ public class ArticleController extends Controller {
 		System.out.println("테스트용 게시물 데이터 5개 생성");
 		articleService.makeTestData();
 	}
-
 }
